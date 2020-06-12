@@ -28,7 +28,7 @@ public class ApprovalTest {
 		PrintStream old = System.out;
 		System.setOut(ps);
 
-		printPrimes.main(new String[0]);
+		printPrimes.invoke();
 
 		System.out.flush();
 		System.setOut(old);

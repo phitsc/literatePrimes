@@ -1,70 +1,50 @@
 package literatePrimes;
 
 public class PrintPrimes {
-	public static void main(String[] args) {
-		final int M = 1000;
-		final int RR = 50;
-		final int CC = 4;
-		final int WW = 10;
-		final int ORDMAX = 30;
-		int P[] = new int[M + 1];
-		int PAGENUMBER;
-		int PAGEOFFSET;
-		int ROWOFFSET;
-		int C;
+	private final GeneratePrimes generatePrimes;
+	private static final int numberOfRowsOutputPerPage = 50;
+	private static final int numberOfColumnsOutput = 4;
+	private int[] primes;
+	private int nofPrimes;
 
-		int J;
-		int K;
-		boolean JPRIME;
-		int ORD;
-		int SQUARE;
-		int N;
-		int MULT[] = new int[ORDMAX + 1];
+	public PrintPrimes() {
+		generatePrimes = new GeneratePrimes();
+	}
 
-		J = 1;
-		K = 1;
-		P[1] = 2;
-		ORD = 2;
-		SQUARE = 9;
+	public void invoke() {
+		initialise();
+		printPrimes();
+	}
 
-		while (K < M) {
-			do {
-				J = J + 2;
-				if (J == SQUARE) {
-					ORD = ORD + 1;
-					SQUARE = P[ORD] * P[ORD];
-					MULT[ORD - 1] = J;
-				}
-				N = 2;
-				JPRIME = true;
-				while (N < ORD && JPRIME) {
-					while (MULT[N] < J)
-						MULT[N] = MULT[N] + P[N] + P[N];
-					if (MULT[N] == J)
-						JPRIME = false;
-					N = N + 1;
-				}
-			} while (!JPRIME);
-			K = K + 1;
-			P[K] = J;
+	private void initialise() {
+		primes = generatePrimes.invoke();
+		nofPrimes = primes.length - 1;
+	}
+
+	private void printPrimes() {
+		for(int pageOffset = 1, pageNumber = 1; pageOffset <= nofPrimes;
+			pageOffset += numberOfRowsOutputPerPage * numberOfColumnsOutput, pageNumber++) {
+			pageHeader(pageNumber);
+			pageBody(pageOffset);
+			pageFooter();
 		}
-		{
-			PAGENUMBER = 1;
-			PAGEOFFSET = 1;
-			while (PAGEOFFSET <= M) {
-				System.out.println("The First " + M +
-                                     " Prime Numbers --- Page "+PAGENUMBER);
-				System.out.println("");
-				for (ROWOFFSET = PAGEOFFSET; ROWOFFSET < PAGEOFFSET + RR; ROWOFFSET++) {
-					for (C = 0; C < CC; C++)
-						if (ROWOFFSET + C * RR <= M)
-							System.out.format("% 10d",P[ROWOFFSET + C * RR]);
-					System.out.println("");
-				}
-				System.out.println("\f");
-				PAGENUMBER = PAGENUMBER + 1;
-				PAGEOFFSET = PAGEOFFSET + RR * CC;
-			}
+	}
+
+	private void pageHeader(int pageNumber) {
+		System.out.println("The First " + nofPrimes + " Prime Numbers --- Page " + pageNumber);
+		System.out.println();
+	}
+
+	private void pageBody(int pageOffset) {
+		for (int rowOffset = pageOffset; rowOffset < pageOffset + numberOfRowsOutputPerPage; rowOffset++) {
+			for (int column = 0; column < numberOfColumnsOutput; column++)
+				if (rowOffset + column * numberOfRowsOutputPerPage <= nofPrimes)
+					System.out.format("%10d", primes[rowOffset + column * numberOfRowsOutputPerPage]);
+			System.out.println();
 		}
+	}
+
+	private void pageFooter() {
+		System.out.println("\f");
 	}
 }
