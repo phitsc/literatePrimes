@@ -1,17 +1,9 @@
 package literatePrimes;
 
 public class PrintPrimes {
-	public static void main(String[] args) {
-		final int M = 1000;
-		final int RR = 50;
-		final int CC = 4;
-		final int WW = 10;
-		final int ORDMAX = 30;
+
+	private static int[] calculatePrimes(int M, int ORDMAX) {
 		int P[] = new int[M + 1];
-		int PAGENUMBER;
-		int PAGEOFFSET;
-		int ROWOFFSET;
-		int C;
 
 		int J;
 		int K;
@@ -48,23 +40,43 @@ public class PrintPrimes {
 			K = K + 1;
 			P[K] = J;
 		}
-		{
-			PAGENUMBER = 1;
-			PAGEOFFSET = 1;
-			while (PAGEOFFSET <= M) {
-				System.out.println("The First " + M +
-                                     " Prime Numbers --- Page "+PAGENUMBER);
+
+		return P;
+	}
+
+	private static void printPrimes(int[] P, int M, int RR, int CC) {
+		int PAGENUMBER;
+		int PAGEOFFSET;
+		int ROWOFFSET;
+		int C;
+
+		PAGENUMBER = 1;
+		PAGEOFFSET = 1;
+		while (PAGEOFFSET <= M) {
+			System.out.println("The First " + M +
+                                 " Prime Numbers --- Page "+PAGENUMBER);
+			System.out.println("");
+			for (ROWOFFSET = PAGEOFFSET; ROWOFFSET < PAGEOFFSET + RR; ROWOFFSET++) {
+				for (C = 0; C < CC; C++)
+					if (ROWOFFSET + C * RR <= M)
+						System.out.format("% 10d",P[ROWOFFSET + C * RR]);
 				System.out.println("");
-				for (ROWOFFSET = PAGEOFFSET; ROWOFFSET < PAGEOFFSET + RR; ROWOFFSET++) {
-					for (C = 0; C < CC; C++)
-						if (ROWOFFSET + C * RR <= M)
-							System.out.format("% 10d",P[ROWOFFSET + C * RR]);
-					System.out.println("");
-				}
-				System.out.println("\f");
-				PAGENUMBER = PAGENUMBER + 1;
-				PAGEOFFSET = PAGEOFFSET + RR * CC;
 			}
+			System.out.println("\f");
+			PAGENUMBER = PAGENUMBER + 1;
+			PAGEOFFSET = PAGEOFFSET + RR * CC;
 		}
+
+	}
+
+	public static void main(String[] args) {
+		final int M = 1000;
+		final int RR = 50;
+		final int CC = 4;
+		final int WW = 10;
+		final int ORDMAX = 30;
+
+		int P[] = calculatePrimes(M, ORDMAX);
+		printPrimes(P, M, RR, CC);
 	}
 }
